@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Student Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="skills.html">Skills</a></li>
+                <li><a href="add_student.html">Add Student</a></li>
+                <li><a href="add_course.html">Add Course</a></li>
+                <li><a href="add_skill.html">Add Skill</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Welcome to the Student Management System</h2>
+        <section id="intro">
+            <h2>Introduction</h2>
+            <p>This system allows you to manage students, courses, and skills efficiently. Use the navigation links above to add new students, courses, or skills to the system.</p>
+        </section>
+
+        <br><br><br>
+        <section id="overview">
+            <h2>System Overview</h2>
+            <p>Our student management system provides the following features:</p>
+            <ul>
+                <li><strong>Add and manage students:</strong> Enter student details and keep track of their courses and skills.</li>
+                <li><strong>Add and manage courses:</strong> Create and organize courses that students can enroll in.</li>
+                <li><strong>Add and manage skills:</strong> Track skills that students can acquire or improve.</li>
+            </ul>
+        </section>
+
+        <br><br><br>
+        <section id="add-student">
+            <h2>Add Student</h2>
+            <form id="student-form" action="/add-student" method="post">
+                <input type="text" id="name" name="name" placeholder="Name" required>
+                <input type="text" id="courses" name="courses" placeholder="Courses" required>
+                <input type="text" id="skills" name="skills" placeholder="Skills" required>
+                <button type="submit">Add Student</button>
+            </form>
+            <p id="response-message"></p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Student Management System. All rights reserved.</p>
+    </footer>
+    <script src="js/script.js"></script>
+</body>
+</html>

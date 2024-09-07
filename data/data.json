@@ -1,0 +1,24 @@
+{
+    "students": [
+        {
+            "id": 1,
+            "name": "John Doe",
+            "courses": ["Math", "Science"],
+            "skills": ["Programming", "Data Analysis"]
+        }
+    ],
+    "courses": [
+        {
+            "id": 1,
+            "name": "Math",
+            "description": "Basic Mathematics"
+        }
+    ],
+    "skills": [
+        {
+            "id": 1,
+            "name": "Programming",
+            "description": "Ability to write code"
+        }
+    ]
+}
