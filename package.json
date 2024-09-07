@@ -4,7 +4,6 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "mkdir -p public && cp -r * public" // Copies all files to 'public'
   },
   "dependencies": {
     "express": "^4.18.2",
