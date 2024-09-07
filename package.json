@@ -4,8 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "echo 'Building project...' && your-build-command-here",
-    "vercel-build": "echo 'Vercel build step...' && your-vercel-build-command-here"
+    "build": "mkdir -p public && cp -r * public" // Copies all files to 'public'
   },
   "dependencies": {
     "express": "^4.18.2",
