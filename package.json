@@ -1,18 +1,16 @@
 {
-  "name": "nbazeideas",
+  "name": "student-management-system",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "echo 'Building project...' && your-build-command-here",
+    "vercel-build": "echo 'Vercel build step...' && your-vercel-build-command-here"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "express": "^4.18.2",
     "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "express": "^4.19.2"
-  },
-  "description": ""
+    "cors": "^2.8.5"
+  }
 }
+
