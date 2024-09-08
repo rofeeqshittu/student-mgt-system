@@ -38,9 +38,9 @@ connection.connect((err) => {
 
 // Create: Add a new student
 app.post('/add-student', (req, res) => {
-  const { name, age, email } = req.body;
-  const query = 'INSERT INTO students (name, age, email) VALUES (?, ?, ?)';
-  connection.query(query, [name, age, email], (err, result) => {
+  const { name, email, age, skills, course } = req.body;
+  const query = 'INSERT INTO students (name, email, age, skills, course) VALUES (?, ?, ?, ?, ?)';
+  connection.query(query, [name, email, age, skills, course], (err, result) => {
     if (err) {
       console.error('Error inserting student:', err);
       return res.status(500).send('Error adding student');
