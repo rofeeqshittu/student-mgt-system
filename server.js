@@ -174,5 +174,10 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });
 
+// Middleware Configuration
+app.use(express.json()); // To parse incoming JSON requests
+app.use(express.urlencoded({ extended: true })); // To parse URL-encoded bodies
+
+
 module.exports = connection; // To reuse the connection across your app
 

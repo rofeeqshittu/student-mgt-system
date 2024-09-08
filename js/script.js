@@ -10,11 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function handleStudentForm(event) {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault();
     const formData = new FormData(event.target);
-    fetch('/add-student', {
+    const data = Object.fromEntries(formData.entries());
+
+    fetch('add-student', {
         method: 'POST',
-        body: formData
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
     }).then(response => response.text())
       .then(text => {
           document.getElementById('response-message').innerText = text;
@@ -24,11 +29,16 @@ function handleStudentForm(event) {
 }
 
 function handleCourseForm(event) {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault();
     const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries());
+
     fetch('/add-course', {
         method: 'POST',
-        body: formData
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
     }).then(response => response.text())
       .then(text => {
           document.getElementById('response-message').innerText = text;
@@ -38,11 +48,16 @@ function handleCourseForm(event) {
 }
 
 function handleSkillForm(event) {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault();
     const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries());
+
     fetch('/add-skill', {
         method: 'POST',
-        body: formData
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
     }).then(response => response.text())
       .then(text => {
           document.getElementById('response-message').innerText = text;
