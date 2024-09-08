@@ -22,15 +22,27 @@
     </header>
     <main>
         <h2>Add a New Student</h2>
-        <form id="student-form" method="POST" action="/add-student">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            <label for="courses">Courses:</label>
-            <input type="text" id="courses" name="courses">
-            <label for="skills">Skills:</label>
-            <input type="text" id="skills" name="skills">
-            <button type="submit">Add Student</button>
-        </form>
+	<p><em>* means field is required</em></p>
+	<form id="student-form" action="/add-student" method="POST">
+	   <label for="name">Name*:</label>
+	   <input type="text" id="name" name="name" required>
+
+  	   <label for="email">Email:</label>
+ 	   <input type="email" id="email" name="email">
+
+	   <label for="age">Age*:</label>
+  	   <input type="number" id="age" name="age" required>
+
+  	   <label for="skills">Skills:</label>
+  	   <input type="text" id="skills" name="skills">
+
+  	   <!-- Add course field -->
+	   <label for="course">Course*:</label>
+  	   <input type="text" id="course" name="course" required>
+
+ 	   <button type="submit">Add Student</button>
+	</form>
+
         <div id="response-message"></div>
     </main>
     <script src="js/script.js"></script>
