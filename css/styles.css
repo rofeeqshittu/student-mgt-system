@@ -30,3 +30,14 @@ nav ul li a {
 main {
     padding: 2rem;
 }
+button {
+    padding: 10px;
+}
+
+footer {
+    padding: auto;
+    color: white;
+    background-color: gray;
+    align-content: center;
+    text-align: center;
+}
