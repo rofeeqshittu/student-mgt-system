@@ -30,8 +30,20 @@ nav ul li a {
 main {
     padding: 2rem;
 }
+
+/* form {
+    align-self: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+} */
+
 button {
     padding: 10px;
+}
+img {
+    max-width: 50%;
+    max-height: 45%;
 }
 
 footer {
