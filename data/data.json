@@ -2,9 +2,31 @@
     "students": [
         {
             "id": 1,
-            "name": "John Doe",
-            "courses": ["Math", "Science"],
-            "skills": ["Programming", "Data Analysis"]
+            "name": "John Smith",
+            "courses": [
+                "Math",
+                "Science"
+            ],
+            "skills": [
+                "Programming",
+                "Data Analysis"
+            ],
+            "age": 25,
+            "email": "john@example.com"
+        },
+        {
+            "id": 2,
+            "name": "Jane Smith",
+            "email": "jane@example.com",
+            "age": 22,
+            "skills": [
+                "Programming",
+                "Design"
+            ],
+            "courses": [
+                "Math",
+                "Science"
+            ]
         }
     ],
     "courses": [
@@ -12,6 +34,16 @@
             "id": 1,
             "name": "Math",
             "description": "Basic Mathematics"
+        },
+        {
+            "id": 2,
+            "name": "Computer Science",
+            "description": "Introduction to programming and algorithms"
+        },
+        {
+            "id": 6,
+            "name": "reer",
+            "description": "rr"
         }
     ],
     "skills": [
