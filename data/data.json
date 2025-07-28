@@ -33,17 +33,12 @@
         {
             "id": 1,
             "name": "Math",
-            "description": "Basic Mathematics"
+            "description": "Basic Mathematicsr"
         },
         {
             "id": 2,
             "name": "Computer Science",
             "description": "Introduction to programming and algorithms"
-        },
-        {
-            "id": 6,
-            "name": "reer",
-            "description": "rr"
         }
     ],
     "skills": [
