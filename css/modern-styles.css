@@ -616,6 +616,19 @@ p {
   color: white;
 }
 
+.btn-info {
+  background: var(--gradient-info);
+  color: white;
+  border: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-info:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  color: white;
+}
+
 .btn-outline {
   background: transparent;
   color: var(--neutral-700);
