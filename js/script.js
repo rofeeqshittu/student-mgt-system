@@ -271,45 +271,71 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // --- FETCH REAL DATA FROM API ---
-    // Fetch courses
-    if (document.getElementById('courses-list')) {
-      fetch('/courses')
-        .then(response => response.json())
-        .then(data => {
-          renderCoursesTable(data);
-        })
-        .catch(error => {
-          console.error('Error fetching courses:', error);
-          renderCoursesTable(mockCourses); // Fallback to mock data
-        });
-    }
+    // --- ENHANCED DATA LOADING SYSTEM ---
     
-    // Fetch skills
-    if (document.getElementById('skills-list')) {
-      fetch('/skills')
-        .then(response => response.json())
-        .then(data => {
-          renderSkillsTable(data);
-        })
-        .catch(error => {
-          console.error('Error fetching skills:', error);
-          renderSkillsTable(mockSkills); // Fallback to mock data
-        });
+    // Load data from JSON file or fallback to mock data
+    async function loadData() {
+        try {
+            // Try to load from data.json file
+            const response = await fetch('./data/data.json');
+            if (!response.ok) throw new Error('Failed to load data.json');
+            
+            const data = await response.json();
+            console.log('✅ Loaded data from data.json');
+            return data;
+        } catch (error) {
+            console.warn('⚠️ Could not load data.json, using mock data:', error);
+            
+            // Fallback to enhanced mock data
+            return {
+                students: mockStudents.map((student, index) => ({
+                    id: index + 1,
+                    name: student.name,
+                    email: student.email || `${student.name.toLowerCase().replace(' ', '.')}@university.edu`,
+                    age: student.age || Math.floor(Math.random() * 10) + 18,
+                    courses: student.courses,
+                    skills: student.skills,
+                    dateAdded: new Date().toISOString().split('T')[0]
+                })),
+                courses: mockCourses.map((course, index) => ({
+                    id: index + 1,
+                    name: course.name,
+                    description: course.description
+                })),
+                skills: mockSkills.map((skill, index) => ({
+                    id: index + 1,
+                    name: skill.name,
+                    description: skill.description
+                }))
+            };
+        }
     }
-    
-    // Fetch students
-    if (document.getElementById('students-list') || document.getElementById('recent-students-list')) {
-      fetch('/students')
-        .then(response => response.json())
-        .then(data => {
-          renderStudentsTable(data);
-        })
-        .catch(error => {
-          console.error('Error fetching students:', error);
-          renderStudentsTable(mockStudents); // Fallback to mock data
-        });
+
+    // Initialize all data loading
+    async function initializeData() {
+        const data = await loadData();
+        
+        // Render appropriate sections based on current page
+        if (document.getElementById('courses-list')) {
+            renderCoursesTable(data.courses);
+        }
+        
+        if (document.getElementById('skills-list')) {
+            renderSkillsTable(data.skills);
+        }
+        
+        if (document.getElementById('students-list') || document.getElementById('recent-students-list')) {
+            renderStudentsTable(data.students);
+        }
+        
+        // Update dashboard stats if on dashboard
+        updateDashboardStats(data);
+        
+        return data;
     }
+
+    // Call the enhanced initialization
+    initializeData().catch(console.error);
 });
 
 // Initialize page-specific functionality
@@ -355,21 +381,33 @@ function initializePageFunctionality() {
 }
 
 // Update dashboard statistics
-function updateDashboardStats() {
+function updateDashboardStats(data = null) {
     if (document.querySelector('.stat-number')) {
-        Promise.all([
-            fetch('/students').then(r => r.json()).catch(() => []),
-            fetch('/courses').then(r => r.json()).catch(() => []),
-            fetch('/skills').then(r => r.json()).catch(() => [])
-        ]).then(([students, courses, skills]) => {
-            const studentCount = document.querySelector('.stat-students .stat-number');
-            const courseCount = document.querySelector('.stat-courses .stat-number');
-            const skillCount = document.querySelector('.stat-skills .stat-number');
+        if (data) {
+            // Use provided data
+            const studentCount = document.getElementById('total-students');
+            const courseCount = document.getElementById('total-courses');
+            const skillCount = document.getElementById('total-skills');
             
-            if (studentCount) animateNumber(studentCount, students.length);
-            if (courseCount) animateNumber(courseCount, courses.length);
-            if (skillCount) animateNumber(skillCount, skills.length);
-        });
+            if (studentCount) animateNumber(studentCount, data.students.length);
+            if (courseCount) animateNumber(courseCount, data.courses.length);
+            if (skillCount) animateNumber(skillCount, data.skills.length);
+        } else {
+            // Try API calls as fallback
+            Promise.all([
+                fetch('/students').then(r => r.json()).catch(() => []),
+                fetch('/courses').then(r => r.json()).catch(() => []),
+                fetch('/skills').then(r => r.json()).catch(() => [])
+            ]).then(([students, courses, skills]) => {
+                const studentCount = document.getElementById('total-students');
+                const courseCount = document.getElementById('total-courses');
+                const skillCount = document.getElementById('total-skills');
+                
+                if (studentCount) animateNumber(studentCount, students.length);
+                if (courseCount) animateNumber(courseCount, courses.length);
+                if (skillCount) animateNumber(skillCount, skills.length);
+            });
+        }
     }
 }
 
@@ -387,29 +425,32 @@ function animateNumber(element, target) {
     }, 50);
 }
 
-// Enhanced button functionality
+// Enhanced button functionality with better data handling
 function handleViewStudent(studentId) {
     showModal('Student Details', `Loading student information...`);
-    fetch(`/students`)
-        .then(response => response.json())
-        .then(students => {
-            const student = students.find(s => s.id === studentId);
-            if (student) {
-                const modalContent = `
-                    <div class="student-details">
-                        <h5>${student.name}</h5>
-                        <p><strong>Email:</strong> ${student.email || 'Not provided'}</p>
-                        <p><strong>Age:</strong> ${student.age || 'Not provided'}</p>
-                        <p><strong>Courses:</strong> ${student.courses ? student.courses.join(', ') : 'None'}</p>
-                        <p><strong>Skills:</strong> ${student.skills ? student.skills.join(', ') : 'None'}</p>
-                    </div>
-                `;
-                updateModalContent('Student Details', modalContent);
-            }
-        })
-        .catch(error => {
-            updateModalContent('Error', 'Failed to load student information.');
-        });
+    
+    // Try to get data from current session or fetch fresh
+    loadData().then(data => {
+        const student = data.students.find(s => s.id === studentId);
+        if (student) {
+            const modalContent = `
+                <div class="student-details">
+                    <h5>${student.name}</h5>
+                    <p><strong>Email:</strong> ${student.email || 'Not provided'}</p>
+                    <p><strong>Age:</strong> ${student.age || 'Not provided'}</p>
+                    <p><strong>Courses:</strong> ${Array.isArray(student.courses) ? student.courses.join(', ') : (student.courses || 'None')}</p>
+                    <p><strong>Skills:</strong> ${Array.isArray(student.skills) ? student.skills.join(', ') : (student.skills || 'None')}</p>
+                    ${student.dateAdded ? `<p><strong>Date Added:</strong> ${student.dateAdded}</p>` : ''}
+                </div>
+            `;
+            updateModalContent('Student Details', modalContent);
+        } else {
+            updateModalContent('Error', 'Student not found.');
+        }
+    }).catch(error => {
+        updateModalContent('Error', 'Failed to load student information.');
+        console.error('Error loading student:', error);
+    });
 }
 
 function handleEditStudent(studentId) {
