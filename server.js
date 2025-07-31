@@ -14,6 +14,12 @@ app.use(cors()); // Allow cross-origin requests
 app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(bodyParser.json()); // Parse JSON bodies
 
+// Logging middleware
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
+
 // Serve static files (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname)));
 
@@ -283,12 +289,18 @@ app.post('/delete-skill', (req, res) => {
   }
 });
 
+// Add error handling middleware at the end
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).send('Internal Server Error');
+});
+
+// This should be the last middleware to catch any errors
+app.use((req, res) => {
+  res.status(404).send('Not Found');
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });
-
-// Middleware Configuration
-app.use(express.json()); // To parse incoming JSON requests
-app.use(express.urlencoded({ extended: true })); // To parse URL-encoded bodies
-

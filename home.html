@@ -11,7 +11,7 @@
     <style>
         /* Advanced Homepage Styles */
         .welcome-section {
-            background: linear-gradient(135deg, var(--primary-500) 0%, var(--warning-500) 100%);
+            background: var(--gradient-brand);
             color: white;
             padding: 6rem 0;
             position: relative;
@@ -27,8 +27,7 @@
             bottom: 0;
             background: 
                 radial-gradient(circle at 25% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+                radial-gradient(circle at 75% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
         }
 
         .welcome-content {
@@ -37,7 +36,7 @@
         }
 
         .welcome-title {
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 900;
             margin-bottom: 1.5rem;
             line-height: 1.1;
@@ -46,7 +45,7 @@
         }
 
         .welcome-subtitle {
-            font-size: 1.5rem;
+            font-size: clamp(1.125rem, 2.5vw, 1.5rem);
             opacity: 0.95;
             margin-bottom: 3rem;
             font-weight: 400;
@@ -61,57 +60,132 @@
             gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
+            align-items: center;
         }
 
-        .btn-welcome-primary {
+        /* Remove conflicting button styles - use CSS framework classes */
+        
+        /* Essential White Button Styles */
+        .btn-white {
             background: white;
             color: var(--primary-600);
-            border: none;
-            padding: 1.25rem 3rem;
-            font-size: 1.125rem;
+            border: 2px solid white;
             font-weight: 700;
-            border-radius: var(--radius-2xl);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.75rem;
+            justify-content: center;
+            padding: 0.75rem 2rem;
+            border-radius: var(--radius-lg);
         }
 
-        .btn-welcome-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        .btn-white:hover {
+            background: rgba(255, 255, 255, 0.9);
             color: var(--primary-700);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
         }
 
-        .btn-welcome-secondary {
-            background: rgba(255, 255, 255, 0.1);
+        .btn-outline-white {
+            background: transparent;
             color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 1.25rem 3rem;
-            font-size: 1.125rem;
+            border: 2px solid rgba(255, 255, 255, 0.7);
             font-weight: 700;
-            border-radius: var(--radius-2xl);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.75rem;
-            backdrop-filter: blur(10px);
+            justify-content: center;
+            padding: 0.75rem 2rem;
+            border-radius: var(--radius-lg);
         }
 
-        .btn-welcome-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.6);
+        .btn-outline-white:hover {
+            background: rgba(255, 255, 255, 0.15);
             color: white;
-            transform: translateY(-3px);
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+        }
+
+        /* Large button size */
+        .btn-lg {
+            padding: 1rem 2.5rem;
+            font-size: 1.125rem;
+        }
+
+        /* Small button size */
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Utility classes */
+        .w-full {
+            width: 100%;
+        }
+
+        /* Enhanced gap utilities for better spacing */
+        .gap-3 {
+            gap: 1rem;
+        }
+
+        .me-3 {
+            margin-right: 1rem;
+        }
+
+        .me-2 {
+            margin-right: 0.5rem;
+        }
+        
+        /* Enhanced accessibility and interaction states */
+        .overview-card:focus-within,
+        .quick-start-card:focus-within,
+        .activity-item:focus-within {
+            outline: 2px solid var(--primary-500);
+            outline-offset: 2px;
+        }
+
+        .btn:focus {
+            box-shadow: 0 0 0 3px rgba(0, 166, 147, 0.3);
+        }
+
+        /* Improved loading states */
+        .stat-number {
+            transition: all 0.3s ease;
+        }
+
+        .stat-number.loading {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        /* Better visual hierarchy */
+        .section-header {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-description {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--neutral-600);
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .system-overview {
             padding: 6rem 0;
-            background: 
-                linear-gradient(135deg, var(--neutral-50) 0%, white 100%);
+            background: var(--gradient-subtle);
         }
 
         .overview-card {
@@ -134,7 +208,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: var(--gradient-primary);
+            background: var(--gradient-brand);
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
@@ -162,19 +236,19 @@
         }
 
         .overview-icon.primary { 
-            background: var(--gradient-primary);
+            background: var(--gradient-brand);
             box-shadow: 0 8px 30px rgba(0, 166, 147, 0.3);
         }
         .overview-icon.secondary { 
-            background: var(--gradient-secondary);
+            background: var(--gradient-brand);
             box-shadow: 0 8px 30px rgba(255, 149, 0, 0.3);
         }
         .overview-icon.success { 
-            background: var(--gradient-success);
+            background: var(--gradient-brand);
             box-shadow: 0 8px 30px rgba(34, 197, 94, 0.3);
         }
         .overview-icon.info { 
-            background: var(--gradient-info);
+            background: var(--gradient-brand);
             box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3);
         }
 
@@ -214,7 +288,7 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            background: var(--gradient-primary);
+            background: var(--gradient-brand);
             transform: scaleY(0);
             transition: transform 0.3s ease;
         }
@@ -317,7 +391,7 @@
 
         .progress-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 0.75rem;
         }
@@ -391,7 +465,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: var(--gradient-primary);
+            background: var(--gradient-brand);
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
@@ -416,7 +490,7 @@
             justify-content: center;
             font-size: 1.5rem;
             color: white;
-            background: var(--gradient-primary);
+            background: var(--gradient-brand);
             margin-bottom: 1.5rem;
             box-shadow: 0 8px 25px rgba(0, 166, 147, 0.3);
         }
@@ -496,32 +570,51 @@
         }
 
         @media (max-width: 768px) {
-            .welcome-title {
-                font-size: 2.5rem;
-            }
-            
-            .welcome-subtitle {
-                font-size: 1.25rem;
+            .welcome-section {
+                padding: 4rem 0;
             }
             
             .welcome-cta {
                 flex-direction: column;
                 align-items: center;
-            }
-            
-            .btn-welcome-primary,
-            .btn-welcome-secondary {
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
+                gap: 1rem;
             }
 
             .overview-card {
                 padding: 2rem;
+                margin-bottom: 2rem;
             }
 
             .stats-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .system-overview,
+            .main-content-section,
+            .quick-start {
+                padding: 3rem 0;
+            }
+
+            .hero-cards-container {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-section {
+                padding: 3rem 0;
+            }
+
+            .overview-card,
+            .recent-activity,
+            .stats-card,
+            .quick-start-card {
+                padding: 1.5rem;
+            }
+
+            .activity-item {
+                padding: 1rem;
             }
         }
     </style>
@@ -565,7 +658,7 @@
                     <i class="fas fa-user-plus nav-icon"></i>
                     <span>Students</span>
                 </a>
-                <a href="landing.html" class="nav-link">
+                <a href="index.html" class="nav-link">
                     <i class="fas fa-external-link-alt nav-icon"></i>
                     <span>Landing</span>
                 </a>
@@ -574,21 +667,24 @@
     </header>
 
     <!-- Welcome Section -->
-    <section class="welcome-section">
+    <section class="welcome-section" style="background: var(--gradient-brand); position: relative; overflow: hidden;">
+        <!-- Background Pattern -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background: url('data:image/svg+xml,<svg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><g fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;><g fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.4&quot;><circle cx=&quot;30&quot; cy=&quot;30&quot; r=&quot;1.5&quot;/></g></g></svg>');"></div>
+        
         <div class="container">
-            <div class="welcome-content text-center">
-                <h1 class="welcome-title">Welcome to EduVexa</h1>
-                <p class="welcome-subtitle">
+            <div class="welcome-content text-center" style="position: relative; z-index: 1;">
+                <h1 class="welcome-title text-white mb-4">Welcome to EduVexa</h1>
+                <p class="welcome-subtitle text-white opacity-90 mb-5" style="max-width: 700px; margin: 0 auto;">
                     Your comprehensive student management platform designed for modern educational excellence. 
                     Streamline operations, enhance learning outcomes, and empower your academic community with cutting-edge technology.
                 </p>
                 <div class="welcome-cta">
-                    <a href="dashboard.html" class="btn-welcome-primary">
-                        <i class="fas fa-tachometer-alt"></i>
+                    <a href="dashboard.html" class="btn btn-white btn-lg">
+                        <i class="fas fa-tachometer-alt me-2"></i>
                         Go to Dashboard
                     </a>
-                    <a href="add_student.html" class="btn-welcome-secondary">
-                        <i class="fas fa-user-plus"></i>
+                    <a href="add_student.html" class="btn btn-outline-white btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>
                         Add Student
                     </a>
                 </div>
@@ -597,11 +693,14 @@
     </section>
 
     <!-- System Overview -->
-    <section class="system-overview">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="display-6 fw-bold text-neutral-900 mb-4">System Overview</h2>
-                <p class="lead text-neutral-600" style="max-width: 600px; margin: 0 auto;">
+    <section class="system-overview" style="background: var(--neutral-50); position: relative; overflow: hidden;">
+        <!-- Background Pattern -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.4; background: url('data:image/svg+xml,<svg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><g fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;><g fill=&quot;%236366f1&quot; fill-opacity=&quot;0.15&quot;><circle cx=&quot;30&quot; cy=&quot;30&quot; r=&quot;1.5&quot;/></g></g></svg>');"></div>
+        
+        <div class="container" style="position: relative; z-index: 1;">
+            <div class="text-center section-header">
+                <h2 class="section-title text-neutral-900">System Overview</h2>
+                <p class="section-description">
                     Get a comprehensive view of your educational management system with powerful tools and insights
                 </p>
             </div>
@@ -617,7 +716,7 @@
                             Comprehensive student profiles, enrollment tracking, and academic progress monitoring with advanced analytics.
                         </p>
                         <a href="add_student.html" class="btn btn-primary btn-sm">
-                            <i class="fas fa-arrow-right"></i>
+                            <i class="fas fa-arrow-right me-2"></i>
                             Manage Students
                         </a>
                     </div>
@@ -633,7 +732,7 @@
                             Create, manage, and track courses with detailed curriculum and enrollment data for optimal learning outcomes.
                         </p>
                         <a href="courses.html" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-arrow-right"></i>
+                            <i class="fas fa-arrow-right me-2"></i>
                             View Courses
                         </a>
                     </div>
@@ -649,7 +748,7 @@
                             Monitor and develop student competencies with comprehensive skill assessment and progress tracking.
                         </p>
                         <a href="skills.html" class="btn btn-success btn-sm">
-                            <i class="fas fa-arrow-right"></i>
+                            <i class="fas fa-arrow-right me-2"></i>
                             Track Skills
                         </a>
                     </div>
@@ -665,7 +764,7 @@
                             Advanced analytics and comprehensive reporting for data-driven decisions and institutional growth.
                         </p>
                         <a href="dashboard.html" class="btn btn-info btn-sm">
-                            <i class="fas fa-arrow-right"></i>
+                            <i class="fas fa-arrow-right me-2"></i>
                             View Analytics
                         </a>
                     </div>
@@ -675,7 +774,7 @@
     </section>
 
     <!-- Main Content Grid -->
-    <section class="main-content-section">
+    <section class="main-content-section" style="background: white; padding: 4rem 0;">
         <div class="container">
             <div class="row g-4">
                 <!-- Recent Activity -->
@@ -688,7 +787,7 @@
                             </h3>
                         </div>
                         <div class="activity-item">
-                            <div class="activity-icon" style="background: var(--gradient-primary);">
+                            <div class="activity-icon" style="background: var(--gradient-brand);">
                                 <i class="fas fa-user-plus"></i>
                             </div>
                             <div class="activity-content">
@@ -697,7 +796,7 @@
                             </div>
                         </div>
                         <div class="activity-item">
-                            <div class="activity-icon" style="background: var(--gradient-secondary);">
+                            <div class="activity-icon" style="background: var(--gradient-brand);">
                                 <i class="fas fa-book"></i>
                             </div>
                             <div class="activity-content">
@@ -706,7 +805,7 @@
                             </div>
                         </div>
                         <div class="activity-item">
-                            <div class="activity-icon" style="background: var(--gradient-success);">
+                            <div class="activity-icon" style="background: var(--gradient-brand);">
                                 <i class="fas fa-cog"></i>
                             </div>
                             <div class="activity-content">
@@ -715,7 +814,7 @@
                             </div>
                         </div>
                         <div class="activity-item">
-                            <div class="activity-icon" style="background: var(--gradient-info);">
+                            <div class="activity-icon" style="background: var(--gradient-brand);">
                                 <i class="fas fa-chart-bar"></i>
                             </div>
                             <div class="activity-content">
@@ -724,7 +823,7 @@
                             </div>
                         </div>
                         <div class="activity-item">
-                            <div class="activity-icon" style="background: var(--gradient-primary);">
+                            <div class="activity-icon" style="background: var(--gradient-brand);">
                                 <i class="fas fa-users"></i>
                             </div>
                             <div class="activity-content">
@@ -733,8 +832,8 @@
                             </div>
                         </div>
                         <div class="p-4 text-center" style="background: var(--neutral-50); border-top: 1px solid var(--neutral-200);">
-                            <a href="dashboard.html" class="btn btn-outline btn-sm">
-                                <i class="fas fa-history"></i>
+                            <a href="dashboard.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-history me-2"></i>
                                 View All Activity
                             </a>
                         </div>
@@ -777,7 +876,7 @@
                                         <span class="progress-value">85%</span>
                                     </div>
                                     <div class="progress-bar-container">
-                                        <div class="progress-bar bg-gradient-primary" style="width: 85%"></div>
+                                        <div class="progress-bar" style="width: 85%; background: var(--gradient-brand);"></div>
                                     </div>
                                 </div>
                                 
@@ -787,7 +886,7 @@
                                         <span class="progress-value">62%</span>
                                     </div>
                                     <div class="progress-bar-container">
-                                        <div class="progress-bar bg-gradient-secondary" style="width: 62%"></div>
+                                        <div class="progress-bar" style="width: 62%; background: var(--gradient-brand);"></div>
                                     </div>
                                 </div>
                                 
@@ -797,13 +896,13 @@
                                         <span class="progress-value">98%</span>
                                     </div>
                                     <div class="progress-bar-container">
-                                        <div class="progress-bar bg-gradient-success" style="width: 98%"></div>
+                                        <div class="progress-bar" style="width: 98%; background: var(--gradient-brand);"></div>
                                     </div>
                                 </div>
                             </div>
                             
                             <a href="dashboard.html" class="btn btn-primary w-full mt-4">
-                                <i class="fas fa-chart-line"></i>
+                                <i class="fas fa-chart-line me-2"></i>
                                 View Detailed Analytics
                             </a>
                         </div>
@@ -814,11 +913,11 @@
     </section>
 
     <!-- Quick Start Guide -->
-    <section class="quick-start">
+    <section class="quick-start" style="background: linear-gradient(135deg, var(--neutral-50) 0%, var(--neutral-100) 100%); padding: 5rem 0;">
         <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="display-6 fw-bold text-neutral-900 mb-4">Quick Start Guide</h2>
-                <p class="lead text-neutral-600" style="max-width: 600px; margin: 0 auto;">
+            <div class="text-center section-header">
+                <h2 class="section-title text-neutral-900">Quick Start Guide</h2>
+                <p class="section-description">
                     Get started with EduVexa in just a few simple steps and unlock the full potential of your educational institution
                 </p>
             </div>
@@ -826,7 +925,7 @@
             <div class="row g-4">
                 <div class="col-lg-3 col-md-6">
                     <a href="add_student.html" class="quick-start-card">
-                        <div class="quick-start-icon">
+                        <div class="quick-start-icon" style="background: var(--gradient-brand);">
                             <i class="fas fa-user-plus"></i>
                         </div>
                         <h4 class="h5 fw-bold text-neutral-900 mb-3">1. Add Students</h4>
@@ -838,7 +937,7 @@
                 
                 <div class="col-lg-3 col-md-6">
                     <a href="add_course.html" class="quick-start-card">
-                        <div class="quick-start-icon" style="background: var(--gradient-secondary);">
+                        <div class="quick-start-icon" style="background: var(--gradient-brand);">
                             <i class="fas fa-book-plus"></i>
                         </div>
                         <h4 class="h5 fw-bold text-neutral-900 mb-3">2. Create Courses</h4>
@@ -850,7 +949,7 @@
                 
                 <div class="col-lg-3 col-md-6">
                     <a href="add_skill.html" class="quick-start-card">
-                        <div class="quick-start-icon" style="background: var(--gradient-success);">
+                        <div class="quick-start-icon" style="background: var(--gradient-brand);">
                             <i class="fas fa-plus-square"></i>
                         </div>
                         <h4 class="h5 fw-bold text-neutral-900 mb-3">3. Define Skills</h4>
@@ -861,8 +960,8 @@
                 </div>
                 
                 <div class="col-lg-3 col-md-6">
-                    <a href="dashboard.html".html" class="quick-start-card">
-                        <div class="quick-start-icon" style="background: var(--gradient-info);">
+                    <a href="dashboard.html" class="quick-start-card">
+                        <div class="quick-start-icon" style="background: var(--gradient-brand);">
                             <i class="fas fa-chart-bar"></i>
                         </div>
                         <h4 class="h5 fw-bold text-neutral-900 mb-3">4. Monitor Progress</h4>
@@ -876,55 +975,106 @@
     </section>
 
     <!-- System Status -->
-    <section class="system-status">
+    <section class="system-status" style="background: linear-gradient(135deg, var(--neutral-900) 0%, var(--neutral-800) 100%); color: white;">
         <div class="container">
             <div class="status-content">
                 <div class="row align-items-center">
                     <div class="col-md-6">
-                        <h3 class="h4 fw-bold mb-4">System Status</h3>
+                        <h3 class="h4 fw-bold mb-4 text-white">
+                            <i class="fas fa-server me-2 text-success"></i>
+                            System Status
+                        </h3>
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="status-item">
+                                <div class="status-item mb-3">
                                     <span class="status-indicator status-online"></span>
-                                    <span class="status-text">Database: Online</span>
+                                    <span class="status-text text-white opacity-90">Database: Online</span>
                                 </div>
-                                <div class="status-item">
+                                <div class="status-item mb-3">
                                     <span class="status-indicator status-online"></span>
-                                    <span class="status-text">API: Operational</span>
+                                    <span class="status-text text-white opacity-90">API: Operational</span>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="status-item">
+                                <div class="status-item mb-3">
                                     <span class="status-indicator status-online"></span>
-                                    <span class="status-text">Storage: Available</span>
+                                    <span class="status-text text-white opacity-90">Storage: Available</span>
                                 </div>
-                                <div class="status-item">
+                                <div class="status-item mb-3">
                                     <span class="status-indicator status-online"></span>
-                                    <span class="status-text">Security: Active</span>
+                                    <span class="status-text text-white opacity-90">Security: Active</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 text-md-end">
-                        <p class="mb-2 opacity-90">
-                            <strong>Last updated:</strong> <span id="last-updated">Just now</span>
-                        </p>
-                        <p class="mb-2 opacity-75">
-                            <strong>Version:</strong> EduVexa 2.1.0
-                        </p>
-                        <p class="mb-0 opacity-75">
-                            <strong>Uptime:</strong> 99.9% | <strong>Response Time:</strong> 45ms
-                        </p>
+                        <div class="system-metrics p-4 rounded" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+                            <p class="mb-2 text-white opacity-90">
+                                <strong>Last updated:</strong> <span id="last-updated">Just now</span>
+                            </p>
+                            <p class="mb-2 text-white opacity-75">
+                                <strong>Version:</strong> EduVexa 2.1.0
+                            </p>
+                            <p class="mb-0 text-white opacity-75">
+                                <strong>Uptime:</strong> 99.9% | <strong>Response Time:</strong> 45ms
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Premium Footer -->
-    <footer class="main-footer">
-        <div class="container">
-            <p>&copy; 2024 EduVexa - Baze University. Empowering education through technology.</p>
+    <!-- Enhanced Footer -->
+    <footer class="main-footer" style="background: var(--gradient-brand); position: relative; overflow: hidden;">
+        <!-- Background Pattern -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background: url('data:image/svg+xml,<svg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><g fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;><g fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.4&quot;><circle cx=&quot;30&quot; cy=&quot;30&quot; r=&quot;1.5&quot;/></g></g></svg>');"></div>
+        
+        <div class="container" style="position: relative; z-index: 1;">
+            <div class="row align-items-center justify-content-between py-5">
+                <div class="col-md-6">
+                    <div class="footer-brand mb-3 mb-md-0">
+                        <h5 class="text-white fw-bold mb-2">
+                            <i class="fas fa-graduation-cap me-2"></i>
+                            EduVexa
+                        </h5>
+                        <p class="text-white opacity-90 mb-0">
+                            Empowering education through innovative technology solutions
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="footer-info">
+                        <p class="text-white opacity-75 mb-2">
+                            <strong>Baze University</strong> - Student Management System
+                        </p>
+                        <p class="text-white opacity-75 mb-2">
+                            Version 2.1.0 | <span id="footer-year">2024</span>
+                        </p>
+                        <div class="footer-links">
+                            <a href="dashboard.html" class="text-white opacity-75 me-3 text-decoration-none">
+                                <i class="fas fa-tachometer-alt me-1"></i>
+                                Dashboard
+                            </a>
+                            <a href="#" class="text-white opacity-75 me-3 text-decoration-none">
+                                <i class="fas fa-question-circle me-1"></i>
+                                Help
+                            </a>
+                            <a href="#" class="text-white opacity-75 text-decoration-none">
+                                <i class="fas fa-cog me-1"></i>
+                                Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-0" style="border-color: rgba(255,255,255,0.2);">
+            <div class="text-center py-3">
+                <p class="text-white opacity-75 mb-0 small">
+                    &copy; <span id="current-year">2024</span> EduVexa - All rights reserved. 
+                    Designed with <i class="fas fa-heart text-danger"></i> for educational excellence.
+                </p>
+            </div>
         </div>
     </footer>
 
@@ -940,10 +1090,20 @@
             loadSystemStats();
             updateLastUpdated();
             initializeAnimations();
+            updateFooterYear();
             
             // Update last updated time every minute
             setInterval(updateLastUpdated, 60000);
         });
+
+        // Update footer year
+        function updateFooterYear() {
+            const currentYear = new Date().getFullYear();
+            const footerYearElements = document.querySelectorAll('#footer-year, #current-year');
+            footerYearElements.forEach(element => {
+                if (element) element.textContent = currentYear;
+            });
+        }
 
         // Load system statistics with enhanced animation
         async function loadSystemStats() {
