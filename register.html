@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - EduVexa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/modern-styles.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #00a693 0%, #ff9500 100%);
+            padding: 2rem;
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .auth-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .auth-logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #00a693 0%, #ff9500 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .auth-logo-text {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00a693 0%, #ff9500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .auth-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #171717;
+            margin-bottom: 0.5rem;
+        }
+        
+        .auth-subtitle {
+            color: #525252;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        
+        .auth-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .auth-form-group {
+            position: relative;
+        }
+        
+        .auth-form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #404040;
+            margin-bottom: 0.5rem;
+        }
+        
+        .auth-form-label.required::after {
+            content: '*';
+            color: #ef4444;
+            margin-left: 0.25rem;
+        }
+        
+        .auth-form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            padding-left: 2.75rem;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: #fafafa;
+        }
+        
+        .auth-form-input:focus {
+            outline: none;
+            border-color: #00a693;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 166, 147, 0.1);
+        }
+        
+        .auth-form-icon {
+            position: absolute;
+            left: 0.875rem;
+            top: 2.375rem;
+            color: #a3a3a3;
+            font-size: 1rem;
+            width: 1rem;
+            height: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-form-toggle {
+            position: absolute;
+            right: 0.875rem;
+            top: 2.375rem;
+            color: #a3a3a3;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+            width: 1rem;
+            height: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-form-toggle:hover {
+            color: #00a693;
+        }
+        
+        .auth-form-select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            padding-left: 2.75rem;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: #fafafa;
+            cursor: pointer;
+        }
+        
+        .auth-form-select:focus {
+            outline: none;
+            border-color: #00a693;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 166, 147, 0.1);
+        }
+        
+        .password-strength {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            background: #f5f5f5;
+            font-size: 0.75rem;
+        }
+        
+        .strength-meter {
+            height: 4px;
+            border-radius: 2px;
+            margin-bottom: 0.5rem;
+            background: #e5e5e5;
+            overflow: hidden;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .strength-weak .strength-fill {
+            width: 25%;
+            background: #ef4444;
+        }
+        
+        .strength-fair .strength-fill {
+            width: 50%;
+            background: #ff9500;
+        }
+        
+        .strength-good .strength-fill {
+            width: 75%;
+            background: #06b6d4;
+        }
+        
+        .strength-strong .strength-fill {
+            width: 100%;
+            background: #22c55e;
+        }
+        
+        .auth-checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .auth-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        
+        .auth-checkbox input[type="checkbox"] {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 4px;
+            border: 2px solid #d4d4d4;
+            background: white;
+            cursor: pointer;
+            margin-top: 0.125rem;
+        }
+        
+        .auth-checkbox input[type="checkbox"]:checked {
+            background: #00a693;
+            border-color: #00a693;
+        }
+        
+        .auth-checkbox label {
+            font-size: 0.875rem;
+            color: #525252;
+            cursor: pointer;
+            line-height: 1.4;
+        }
+        
+        .auth-checkbox a {
+            color: #00a693;
+            text-decoration: none;
+        }
+        
+        .auth-checkbox a:hover {
+            text-decoration: underline;
+        }
+        
+        .auth-submit-btn {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, #00a693 0%, #ff9500 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .auth-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 166, 147, 0.4);
+        }
+        
+        .auth-submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .auth-submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+        
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e5e5;
+        }
+        
+        .auth-divider span {
+            padding: 0 1rem;
+            color: #a3a3a3;
+            font-size: 0.875rem;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .auth-footer-text {
+            color: #525252;
+            font-size: 0.875rem;
+        }
+        
+        .auth-footer-link {
+            color: #00a693;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 0.25rem;
+        }
+        
+        .auth-footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .loading-spinner {
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .success-message {
+            color: #22c55e;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        @media (max-width: 640px) {
+            .auth-container {
+                padding: 1rem;
+            }
+            
+            .auth-card {
+                padding: 2rem;
+            }
+            
+            .auth-form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <div class="auth-logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="auth-logo-text">EduVexa</div>
+                </div>
+                <h1 class="auth-title">Create Account</h1>
+                <p class="auth-subtitle">Join EduVexa to start managing students and courses efficiently</p>
+            </div>
+            
+            <form class="auth-form" id="register-form">
+                <div class="auth-form-row">
+                    <div class="auth-form-group">
+                        <label for="firstName" class="auth-form-label required">First Name</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-user auth-form-icon"></i>
+                            <input 
+                                type="text" 
+                                id="firstName" 
+                                name="firstName" 
+                                class="auth-form-input" 
+                                placeholder="Enter first name"
+                                required
+                            >
+                        </div>
+                        <div class="error-message" id="firstName-error"></div>
+                    </div>
+                    
+                    <div class="auth-form-group">
+                        <label for="lastName" class="auth-form-label required">Last Name</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-user auth-form-icon"></i>
+                            <input 
+                                type="text" 
+                                id="lastName" 
+                                name="lastName" 
+                                class="auth-form-input" 
+                                placeholder="Enter last name"
+                                required
+                            >
+                        </div>
+                        <div class="error-message" id="lastName-error"></div>
+                    </div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label for="email" class="auth-form-label required">Email Address</label>
+                    <div style="position: relative;">
+                        <i class="fas fa-envelope auth-form-icon"></i>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="auth-form-input" 
+                            placeholder="Enter your email address"
+                            required
+                        >
+                    </div>
+                    <div class="error-message" id="email-error"></div>
+                </div>
+                
+                <div class="auth-form-row">
+                    <div class="auth-form-group">
+                        <label for="role" class="auth-form-label required">Role</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-briefcase auth-form-icon"></i>
+                            <select id="role" name="role" class="auth-form-select" required>
+                                <option value="">Select your role</option>
+                                <option value="administrator">Administrator</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="coordinator">Course Coordinator</option>
+                                <option value="staff">Academic Staff</option>
+                            </select>
+                        </div>
+                        <div class="error-message" id="role-error"></div>
+                    </div>
+                    
+                    <div class="auth-form-group">
+                        <label for="department" class="auth-form-label">Department</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-building auth-form-icon"></i>
+                            <select id="department" name="department" class="auth-form-select">
+                                <option value="">Select department</option>
+                                <option value="computer-science">Computer Science</option>
+                                <option value="mathematics">Mathematics</option>
+                                <option value="engineering">Engineering</option>
+                                <option value="business">Business Administration</option>
+                                <option value="social-sciences">Social Sciences</option>
+                                <option value="humanities">Humanities</option>
+                                <option value="natural-sciences">Natural Sciences</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="error-message" id="department-error"></div>
+                    </div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label for="password" class="auth-form-label required">Password</label>
+                    <div style="position: relative;">
+                        <i class="fas fa-lock auth-form-icon"></i>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="auth-form-input" 
+                            placeholder="Create a strong password"
+                            required
+                        >
+                        <i class="fas fa-eye auth-form-toggle" id="password-toggle" onclick="togglePassword('password')"></i>
+                    </div>
+                    <div class="password-strength" id="password-strength" style="display: none;">
+                        <div class="strength-meter">
+                            <div class="strength-fill"></div>
+                        </div>
+                        <div class="strength-text">Password strength: <span id="strength-label">Weak</span></div>
+                    </div>
+                    <div class="error-message" id="password-error"></div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label for="confirmPassword" class="auth-form-label required">Confirm Password</label>
+                    <div style="position: relative;">
+                        <i class="fas fa-lock auth-form-icon"></i>
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            name="confirmPassword" 
+                            class="auth-form-input" 
+                            placeholder="Confirm your password"
+                            required
+                        >
+                        <i class="fas fa-eye auth-form-toggle" id="confirmPassword-toggle" onclick="togglePassword('confirmPassword')"></i>
+                    </div>
+                    <div class="error-message" id="confirmPassword-error"></div>
+                </div>
+                
+                <div class="auth-checkbox-group">
+                    <div class="auth-checkbox">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">
+                            I agree to the <a href="#" target="_blank">Terms of Service</a> and 
+                            <a href="#" target="_blank">Privacy Policy</a>
+                        </label>
+                    </div>
+                    <div class="auth-checkbox">
+                        <input type="checkbox" id="newsletter" name="newsletter">
+                        <label for="newsletter">
+                            Send me updates about new features and educational resources
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="error-message" id="form-error"></div>
+                
+                <button type="submit" class="auth-submit-btn" id="register-btn">
+                    <span id="register-text">Create Account</span>
+                    <div class="loading-spinner" id="register-spinner" style="display: none;"></div>
+                </button>
+                
+                <div class="success-message" id="register-success"></div>
+            </form>
+            
+            <div class="auth-divider">
+                <span>or sign up with</span>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-outline" style="flex: 1;" onclick="signupWithGoogle()">
+                    <i class="fab fa-google"></i>
+                    Google
+                </button>
+                <button class="btn btn-outline" style="flex: 1;" onclick="signupWithMicrosoft()">
+                    <i class="fab fa-microsoft"></i>
+                    Microsoft
+                </button>
+            </div>
+            
+            <div class="auth-footer">
+                <p class="auth-footer-text">
+                    Already have an account?
+                    <a href="login.html" class="auth-footer-link">Sign in here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Password strength checker
+        document.getElementById('password').addEventListener('input', function(e) {
+            const password = e.target.value;
+            checkPasswordStrength(password);
+        });
+        
+        // Form validation and submission
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Reset previous errors
+            clearErrors();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Validate inputs
+            let isValid = validateForm(data);
+            
+            if (!isValid) return;
+            
+            // Show loading state
+            showLoading(true);
+            
+            // Simulate API call
+            setTimeout(() => {
+                showSuccess('register-success', 'Account created successfully! Please check your email for verification.');
+                setTimeout(() => {
+                    // window.location.href = 'login.html';
+                    console.log('Would redirect to login.html');
+                }, 2000);
+                showLoading(false);
+            }, 2000);
+        });
+        
+        // Form validation function
+        function validateForm(data) {
+            let isValid = true;
+            
+            // First Name validation
+            if (!data.firstName || data.firstName.trim().length < 2) {
+                showError('firstName-error', 'First name must be at least 2 characters');
+                isValid = false;
+            }
+            
+            // Last Name validation
+            if (!data.lastName || data.lastName.trim().length < 2) {
+                showError('lastName-error', 'Last name must be at least 2 characters');
+                isValid = false;
+            }
+            
+            // Email validation
+            if (!data.email) {
+                showError('email-error', 'Email address is required');
+                isValid = false;
+            } else if (!isValidEmail(data.email)) {
+                showError('email-error', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            // Role validation
+            if (!data.role) {
+                showError('role-error', 'Please select your role');
+                isValid = false;
+            }
+            
+            // Password validation
+            if (!data.password) {
+                showError('password-error', 'Password is required');
+                isValid = false;
+            } else if (data.password.length < 8) {
+                showError('password-error', 'Password must be at least 8 characters');
+                isValid = false;
+            }
+            
+            // Confirm password validation
+            if (!data.confirmPassword) {
+                showError('confirmPassword-error', 'Please confirm your password');
+                isValid = false;
+            } else if (data.password !== data.confirmPassword) {
+                showError('confirmPassword-error', 'Passwords do not match');
+                isValid = false;
+            }
+            
+            // Terms acceptance validation
+            if (!data.terms) {
+                showError('form-error', 'You must agree to the Terms of Service and Privacy Policy');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            const strengthContainer = document.getElementById('password-strength');
+            const strengthLabel = document.getElementById('strength-label');
+            
+            if (!password) {
+                strengthContainer.style.display = 'none';
+                return;
+            }
+            
+            strengthContainer.style.display = 'block';
+            
+            let score = 0;
+            let feedback = [];
+            
+            // Length check
+            if (password.length >= 8) score++;
+            if (password.length >= 12) score++;
+            
+            // Character variety checks
+            if (/[a-z]/.test(password)) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^a-zA-Z0-9]/.test(password)) score++;
+            
+            // Determine strength
+            let strength, label;
+            if (score < 3) {
+                strength = 'weak';
+                label = 'Weak';
+            } else if (score < 4) {
+                strength = 'fair';
+                label = 'Fair';
+            } else if (score < 5) {
+                strength = 'good';
+                label = 'Good';
+            } else {
+                strength = 'strong';
+                label = 'Strong';
+            }
+            
+            // Update UI
+            strengthContainer.className = `password-strength strength-${strength}`;
+            strengthLabel.textContent = label;
+        }
+        
+        // Toggle password visibility
+        function togglePassword(fieldId) {
+            const passwordInput = document.getElementById(fieldId);
+            const toggleIcon = document.getElementById(fieldId + '-toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+        
+        // Utility functions
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        function showSuccess(elementId, message) {
+            const successElement = document.getElementById(elementId);
+            successElement.textContent = message;
+            successElement.style.display = 'block';
+        }
+        
+        function clearErrors() {
+            const errorElements = document.querySelectorAll('.error-message, .success-message');
+            errorElements.forEach(element => {
+                element.style.display = 'none';
+                element.textContent = '';
+            });
+        }
+        
+        function showLoading(isLoading) {
+            const button = document.getElementById('register-btn');
+            const text = document.getElementById('register-text');
+            const spinner = document.getElementById('register-spinner');
+            
+            if (isLoading) {
+                button.disabled = true;
+                text.textContent = 'Creating Account...';
+                spinner.style.display = 'block';
+            } else {
+                button.disabled = false;
+                text.textContent = 'Create Account';
+                spinner.style.display = 'none';
+            }
+        }
+        
+        // Social signup functions (placeholder)
+        function signupWithGoogle() {
+            alert('Google signup integration would be implemented here');
+        }
+        
+        function signupWithMicrosoft() {
+            alert('Microsoft signup integration would be implemented here');
+        }
+        
+        // Auto-focus on first input
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('firstName').focus();
+        });
+    </script>
+</body>
+</html>
