@@ -27,6 +27,21 @@
                 "Math",
                 "Science"
             ]
+        },
+        {
+            "id": 3,
+            "name": "Test Student 1754006901510",
+            "email": "test1754006901510@university.edu",
+            "age": 20,
+            "courses": [
+                "Math",
+                "Science"
+            ],
+            "skills": [
+                "Programming",
+                "Problem Solving"
+            ],
+            "dateAdded": "2025-08-01"
         }
     ],
     "courses": [
@@ -39,6 +54,11 @@
             "id": 2,
             "name": "Computer Science",
             "description": "Introduction to programming and algorithms.."
+        },
+        {
+            "id": 3,
+            "name": "Test Course 1754006898693",
+            "description": "This is a test course for persistence testing"
         }
     ],
     "skills": [
@@ -46,6 +66,11 @@
             "id": 1,
             "name": "Programming",
             "description": "Ability to write code"
+        },
+        {
+            "id": 2,
+            "name": "Test Skill 1754006895038",
+            "description": "This is a test skill for persistence testing"
         }
     ]
 }

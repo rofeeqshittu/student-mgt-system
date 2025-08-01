@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Data Persistence - EduVexa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/modern-styles.css">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .test-button {
+            padding: 0.75rem 1.5rem;
+            margin: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-info { background: #3b82f6; color: white; }
+        .test-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+        .success { background: #ecfdf5; border-color: #10b981; color: #065f46; }
+        .error { background: #fef2f2; border-color: #ef4444; color: #991b1b; }
+        .loading { opacity: 0.6; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 style="color: var(--primary-color); margin-bottom: 2rem;">
+            <i class="fas fa-vial"></i> Data Persistence System Test
+        </h1>
+        
+        <!-- Test Section 1: Add Student -->
+        <div class="test-section">
+            <h3><i class="fas fa-user-plus"></i> Test Add Student</h3>
+            <p>This will test adding a new student with all the enhanced persistence features.</p>
+            <button class="test-button btn-primary" onclick="testAddStudent()">
+                <i class="fas fa-play"></i> Test Add Student
+            </button>
+            <div id="student-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- Test Section 2: Add Course -->
+        <div class="test-section">
+            <h3><i class="fas fa-book"></i> Test Add Course</h3>
+            <p>This will test adding a new course with persistence.</p>
+            <button class="test-button btn-success" onclick="testAddCourse()">
+                <i class="fas fa-play"></i> Test Add Course
+            </button>
+            <div id="course-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- Test Section 3: Add Skill -->
+        <div class="test-section">
+            <h3><i class="fas fa-star"></i> Test Add Skill</h3>
+            <p>This will test adding a new skill with persistence.</p>
+            <button class="test-button btn-info" onclick="testAddSkill()">
+                <i class="fas fa-play"></i> Test Add Skill
+            </button>
+            <div id="skill-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- Test Section 4: Load Data -->
+        <div class="test-section">
+            <h3><i class="fas fa-database"></i> Test Load Data</h3>
+            <p>This will test loading data from the JSON file and display current counts.</p>
+            <button class="test-button btn-info" onclick="testLoadData()">
+                <i class="fas fa-download"></i> Load & Display Data
+            </button>
+            <div id="load-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- Test Section 5: Full CRUD Test -->
+        <div class="test-section">
+            <h3><i class="fas fa-cogs"></i> Full CRUD Test</h3>
+            <p>This will test Create, Read, Update, and Delete operations.</p>
+            <button class="test-button btn-danger" onclick="testFullCRUD()">
+                <i class="fas fa-rocket"></i> Run Full CRUD Test
+            </button>
+            <div id="crud-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- Navigation -->
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="dashboard.html" class="test-button btn-primary">
+                <i class="fas fa-tachometer-alt"></i> Back to Dashboard
+            </a>
+            <a href="add_student.html" class="test-button btn-success">
+                <i class="fas fa-user-plus"></i> Test Real Form
+            </a>
+        </div>
+    </div>
+
+    <!-- Include our enhanced script -->
+    <script src="js/script.js"></script>
+    
+    <script>
+        // Test functions
+        
+        async function testAddStudent() {
+            const button = event.target;
+            const result = document.getElementById('student-result');
+            
+            button.classList.add('loading');
+            result.style.display = 'block';
+            result.className = 'test-result';
+            result.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing add student...';
+            
+            try {
+                // Check if function is available
+                if (typeof window.addStudent !== 'function') {
+                    throw new Error('addStudent function is not available. Make sure script.js is loaded.');
+                }
+                
+                const testStudent = {
+                    name: 'Test Student ' + Date.now(),
+                    email: 'test' + Date.now() + '@university.edu',
+                    age: 20,
+                    courses: ['Math', 'Science'],
+                    skills: ['Programming', 'Problem Solving'],
+                    department: 'Computer Science'
+                };
+                
+                const newStudent = await window.addStudent(testStudent);
+                
+                result.className = 'test-result success';
+                result.innerHTML = `
+                    <i class="fas fa-check-circle"></i> <strong>Success!</strong><br>
+                    Student added with ID: ${newStudent.id}<br>
+                    Name: ${newStudent.name}<br>
+                    Email: ${newStudent.email}
+                `;
+            } catch (error) {
+                console.error('Test error:', error);
+                result.className = 'test-result error';
+                result.innerHTML = `
+                    <i class="fas fa-times-circle"></i> <strong>Error!</strong><br>
+                    ${error.message}<br>
+                    <small>Check browser console for more details</small>
+                `;
+            } finally {
+                button.classList.remove('loading');
+            }
+        }
+
+        async function testAddCourse() {
+            const button = event.target;
+            const result = document.getElementById('course-result');
+            
+            button.classList.add('loading');
+            result.style.display = 'block';
+            result.className = 'test-result';
+            result.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing add course...';
+            
+            try {
+                if (typeof window.addCourse !== 'function') {
+                    throw new Error('addCourse function is not available. Make sure script.js is loaded.');
+                }
+                
+                const testCourse = {
+                    course_name: 'Test Course ' + Date.now(),
+                    description: 'This is a test course for persistence testing'
+                };
+                
+                const newCourse = await window.addCourse(testCourse);
+                
+                result.className = 'test-result success';
+                result.innerHTML = `
+                    <i class="fas fa-check-circle"></i> <strong>Success!</strong><br>
+                    Course added with ID: ${newCourse.id}<br>
+                    Name: ${newCourse.name}<br>
+                    Description: ${newCourse.description}
+                `;
+            } catch (error) {
+                console.error('Test error:', error);
+                result.className = 'test-result error';
+                result.innerHTML = `
+                    <i class="fas fa-times-circle"></i> <strong>Error!</strong><br>
+                    ${error.message}<br>
+                    <small>Check browser console for more details</small>
+                `;
+            } finally {
+                button.classList.remove('loading');
+            }
+        }
+
+        async function testAddSkill() {
+            const button = event.target;
+            const result = document.getElementById('skill-result');
+            
+            button.classList.add('loading');
+            result.style.display = 'block';
+            result.className = 'test-result';
+            result.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing add skill...';
+            
+            try {
+                if (typeof window.addSkill !== 'function') {
+                    throw new Error('addSkill function is not available. Make sure script.js is loaded.');
+                }
+                
+                const testSkill = {
+                    skill_name: 'Test Skill ' + Date.now(),
+                    description: 'This is a test skill for persistence testing'
+                };
+                
+                const newSkill = await window.addSkill(testSkill);
+                
+                result.className = 'test-result success';
+                result.innerHTML = `
+                    <i class="fas fa-check-circle"></i> <strong>Success!</strong><br>
+                    Skill added with ID: ${newSkill.id}<br>
+                    Name: ${newSkill.name}<br>
+                    Description: ${newSkill.description}
+                `;
+            } catch (error) {
+                console.error('Test error:', error);
+                result.className = 'test-result error';
+                result.innerHTML = `
+                    <i class="fas fa-times-circle"></i> <strong>Error!</strong><br>
+                    ${error.message}<br>
+                    <small>Check browser console for more details</small>
+                `;
+            } finally {
+                button.classList.remove('loading');
+            }
+        }
+
+        async function testLoadData() {
+            const button = event.target;
+            const result = document.getElementById('load-result');
+            
+            button.classList.add('loading');
+            result.style.display = 'block';
+            result.className = 'test-result';
+            result.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading data...';
+            
+            try {
+                if (typeof window.loadData !== 'function') {
+                    throw new Error('loadData function is not available. Make sure script.js is loaded.');
+                }
+                
+                const data = await window.loadData();
+                
+                result.className = 'test-result success';
+                result.innerHTML = `
+                    <i class="fas fa-check-circle"></i> <strong>Data Loaded Successfully!</strong><br>
+                    Students: ${data.students.length}<br>
+                    Courses: ${data.courses.length}<br>
+                    Skills: ${data.skills.length}<br><br>
+                    <details>
+                        <summary>View Sample Data</summary>
+                        <pre style="background: #f3f4f6; padding: 1rem; border-radius: 4px; margin-top: 1rem;">${JSON.stringify(data, null, 2).substring(0, 500)}...</pre>
+                    </details>
+                `;
+            } catch (error) {
+                console.error('Test error:', error);
+                result.className = 'test-result error';
+                result.innerHTML = `
+                    <i class="fas fa-times-circle"></i> <strong>Error!</strong><br>
+                    ${error.message}<br>
+                    <small>Check browser console for more details</small>
+                `;
+            } finally {
+                button.classList.remove('loading');
+            }
+        }
+
+        async function testFullCRUD() {
+            const button = event.target;
+            const result = document.getElementById('crud-result');
+            
+            button.classList.add('loading');
+            result.style.display = 'block';
+            result.className = 'test-result';
+            result.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running full CRUD test...';
+            
+            const testLog = [];
+            
+            try {
+                // Check if all required functions are available
+                const requiredFunctions = ['addStudent', 'loadData', 'updateRecord', 'deleteRecord'];
+                for (const funcName of requiredFunctions) {
+                    if (typeof window[funcName] !== 'function') {
+                        throw new Error(`${funcName} function is not available. Make sure script.js is loaded.`);
+                    }
+                }
+                
+                // CREATE
+                testLog.push('Step 1: Creating test student...');
+                const testStudent = {
+                    name: 'CRUD Test Student',
+                    email: 'crud.test@university.edu',
+                    age: 22,
+                    courses: ['Computer Science'],
+                    skills: ['Testing']
+                };
+                const newStudent = await window.addStudent(testStudent);
+                testLog.push(`✅ Created student with ID: ${newStudent.id}`);
+                
+                // READ
+                testLog.push('Step 2: Reading data...');
+                const data = await window.loadData();
+                const foundStudent = data.students.find(s => s.id === newStudent.id);
+                if (foundStudent) {
+                    testLog.push('✅ Student found in data');
+                } else {
+                    throw new Error('Student not found after creation');
+                }
+                
+                // UPDATE
+                testLog.push('Step 3: Updating student...');
+                await window.updateRecord('student', newStudent.id, { 
+                    name: 'CRUD Test Student (Updated)',
+                    age: 23 
+                });
+                testLog.push('✅ Student updated successfully');
+                
+                // DELETE
+                testLog.push('Step 4: Deleting student...');
+                await window.deleteRecord('student', newStudent.id);
+                testLog.push('✅ Student deleted successfully');
+                
+                // VERIFY DELETE
+                const finalData = await window.loadData();
+                const deletedStudent = finalData.students.find(s => s.id === newStudent.id);
+                if (!deletedStudent) {
+                    testLog.push('✅ Verified student was deleted');
+                } else {
+                    throw new Error('Student still exists after deletion');
+                }
+                
+                result.className = 'test-result success';
+                result.innerHTML = `
+                    <i class="fas fa-check-circle"></i> <strong>Full CRUD Test Passed!</strong><br><br>
+                    ${testLog.map(log => `${log}<br>`).join('')}
+                `;
+            } catch (error) {
+                console.error('CRUD test error:', error);
+                result.className = 'test-result error';
+                result.innerHTML = `
+                    <i class="fas fa-times-circle"></i> <strong>CRUD Test Failed!</strong><br><br>
+                    ${testLog.map(log => `${log}<br>`).join('')}<br>
+                    <strong>Error:</strong> ${error.message}<br>
+                    <small>Check browser console for more details</small>
+                `;
+            } finally {
+                button.classList.remove('loading');
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Data Persistence Test Page Loaded');
+            
+            // Wait a moment for script.js to fully load and initialize
+            setTimeout(() => {
+                console.log('Available functions:', {
+                    addStudent: typeof window.addStudent,
+                    addCourse: typeof window.addCourse,
+                    addSkill: typeof window.addSkill,
+                    loadData: typeof window.loadData,
+                    updateRecord: typeof window.updateRecord,
+                    deleteRecord: typeof window.deleteRecord
+                });
+                
+                // Show function availability status
+                const statusDiv = document.createElement('div');
+                statusDiv.style.cssText = 'margin: 1rem 0; padding: 1rem; background: #f3f4f6; border-radius: 6px; font-family: monospace;';
+                statusDiv.innerHTML = `
+                    <strong>Function Availability Status:</strong><br>
+                    addStudent: ${typeof window.addStudent}<br>
+                    addCourse: ${typeof window.addCourse}<br>
+                    addSkill: ${typeof window.addSkill}<br>
+                    loadData: ${typeof window.loadData}<br>
+                    updateRecord: ${typeof window.updateRecord}<br>
+                    deleteRecord: ${typeof window.deleteRecord}
+                `;
+                document.querySelector('.test-container').insertBefore(statusDiv, document.querySelector('.test-section'));
+            }, 500);
+        });
+    </script>
+</body>
+</html>

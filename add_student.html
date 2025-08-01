@@ -689,31 +689,87 @@
             console.log('Calculated age:', age);
         }
 
-        // Handle form submission
+        // Handle form submission with enhanced persistence
         function handleFormSubmission() {
             const formData = new FormData(document.getElementById('student-form'));
             const studentData = Object.fromEntries(formData.entries());
             
-            // Add computed fields
-            studentData.fullName = `${studentData.firstName} ${studentData.lastName}`;
-            studentData.courseList = courseList;
-            studentData.skillList = skillList;
-            studentData.registrationDate = new Date().toISOString();
+            // Process and clean the data
+            const processedData = {
+                name: `${studentData.firstName} ${studentData.lastName}`.trim(),
+                email: studentData.email,
+                age: calculateAgeFromDate(studentData.dateOfBirth),
+                phone: studentData.phone || '',
+                dateOfBirth: studentData.dateOfBirth,
+                gender: studentData.gender || '',
+                address: studentData.address || '',
+                studentId: studentData.studentId,
+                enrollmentDate: studentData.enrollmentDate,
+                academicYear: studentData.academicYear,
+                semester: studentData.semester,
+                department: studentData.department,
+                program: studentData.program || '',
+                courses: courseList.length > 0 ? courseList : [],
+                skills: skillList.length > 0 ? skillList : [],
+                registrationDate: new Date().toISOString(),
+                status: 'active'
+            };
             
-            // Simulate API call
+            // Show loading state
             showAlert('Processing student registration...', 'info');
+            const submitButton = document.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering...';
+            submitButton.disabled = true;
             
-            setTimeout(() => {
-                // Simulate successful registration
-                showAlert('Student registered successfully!', 'success');
-                
-                // Add to local data
-                studentData.id = Date.now(); // Simple ID generation
-                addStudentToTable(studentData);
-                
-                // Reset form
-                resetForm();
-            }, 2000);
+            // Call the enhanced addStudent function from script.js
+            if (typeof addStudent === 'function') {
+                addStudent(processedData)
+                    .then(newStudent => {
+                        showAlert(`Student "${newStudent.name}" registered successfully!`, 'success');
+                        
+                        // Add to local display if table exists
+                        addStudentToTable(newStudent);
+                        
+                        // Reset form after success
+                        setTimeout(() => {
+                            resetForm();
+                        }, 1500);
+                    })
+                    .catch(error => {
+                        console.error('Registration error:', error);
+                        showAlert('Error registering student. Please try again.', 'error');
+                    })
+                    .finally(() => {
+                        // Reset button state
+                        submitButton.innerHTML = originalText;
+                        submitButton.disabled = false;
+                    });
+            } else {
+                // Fallback to old method if new system not available
+                console.warn('Enhanced addStudent function not available, using fallback');
+                setTimeout(() => {
+                    showAlert('Student registered successfully! (Fallback mode)', 'success');
+                    processedData.id = Date.now();
+                    addStudentToTable(processedData);
+                    resetForm();
+                    submitButton.innerHTML = originalText;
+                    submitButton.disabled = false;
+                }, 2000);
+            }
+        }
+
+        // Helper function to calculate age from date of birth
+        function calculateAgeFromDate(birthDate) {
+            if (!birthDate) return null;
+            const today = new Date();
+            const birth = new Date(birthDate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            return age;
         }
 
         // Reset form

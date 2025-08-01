@@ -289,6 +289,69 @@ app.post('/delete-skill', (req, res) => {
   }
 });
 
+// --- NEW API ENDPOINT FOR DATA PERSISTENCE ---
+// Save entire data structure (used by enhanced frontend)
+app.post('/api/save-data', (req, res) => {
+  try {
+    const newData = req.body;
+    
+    // Validate data structure
+    if (!newData || typeof newData !== 'object') {
+      return res.status(400).json({ error: 'Invalid data format' });
+    }
+    
+    // Ensure required arrays exist
+    if (!Array.isArray(newData.students)) newData.students = [];
+    if (!Array.isArray(newData.courses)) newData.courses = [];
+    if (!Array.isArray(newData.skills)) newData.skills = [];
+    
+    // Validate each student has required fields
+    newData.students.forEach((student, index) => {
+      if (!student.id || !student.name) {
+        throw new Error(`Student at index ${index} missing required fields (id, name)`);
+      }
+    });
+    
+    // Validate each course has required fields
+    newData.courses.forEach((course, index) => {
+      if (!course.id || !course.name) {
+        throw new Error(`Course at index ${index} missing required fields (id, name)`);
+      }
+    });
+    
+    // Validate each skill has required fields
+    newData.skills.forEach((skill, index) => {
+      if (!skill.id || !skill.name) {
+        throw new Error(`Skill at index ${index} missing required fields (id, name)`);
+      }
+    });
+    
+    // Update global data object
+    data = newData;
+    
+    // Save to JSON file
+    saveData();
+    
+    console.log(`✅ Data persistence successful - Students: ${data.students.length}, Courses: ${data.courses.length}, Skills: ${data.skills.length}`);
+    
+    res.json({ 
+      success: true, 
+      message: 'Data saved successfully',
+      counts: {
+        students: data.students.length,
+        courses: data.courses.length,
+        skills: data.skills.length
+      }
+    });
+  } catch (err) {
+    console.error('❌ Error saving data:', err);
+    res.status(500).json({ 
+      error: 'Error saving data',
+      details: err.message 
+    });
+  }
+});
+
 // Add error handling middleware at the end
 app.use((err, req, res, next) => {
   console.error('Error:', err);

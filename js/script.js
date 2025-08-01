@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // --- ENHANCED DATA LOADING SYSTEM ---
+    // --- ENHANCED DATA LOADING & PERSISTENCE SYSTEM ---
     
     // Load data from JSON file or fallback to mock data
     async function loadData() {
@@ -311,6 +311,195 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- DATA PERSISTENCE FUNCTIONS ---
+    
+    // Save data to server/JSON file
+    async function saveData(data) {
+        try {
+            const response = await fetch('/api/save-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            
+            if (!response.ok) throw new Error('Failed to save data');
+            
+            console.log('✅ Data saved successfully');
+            return await response.json();
+        } catch (error) {
+            console.error('❌ Error saving data:', error);
+            throw error;
+        }
+    }
+
+    // Add new student with persistence
+    async function addStudent(studentData) {
+        try {
+            const currentData = await loadData();
+            
+            // Generate new ID
+            const newId = Math.max(...currentData.students.map(s => s.id), 0) + 1;
+            
+            // Create new student object
+            const newStudent = {
+                id: newId,
+                name: studentData.name,
+                email: studentData.email || '',
+                age: parseInt(studentData.age) || null,
+                courses: Array.isArray(studentData.courses) ? studentData.courses : [],
+                skills: Array.isArray(studentData.skills) ? studentData.skills : [],
+                dateAdded: new Date().toISOString().split('T')[0]
+            };
+            
+            // Add to current data
+            currentData.students.push(newStudent);
+            
+            // Save to server
+            await saveData(currentData);
+            
+            return newStudent;
+        } catch (error) {
+            console.error('Error adding student:', error);
+            throw error;
+        }
+    }
+
+    // Add new course with persistence
+    async function addCourse(courseData) {
+        try {
+            const currentData = await loadData();
+            
+            // Generate new ID
+            const newId = Math.max(...currentData.courses.map(c => c.id), 0) + 1;
+            
+            // Create new course object
+            const newCourse = {
+                id: newId,
+                name: courseData.course_name || courseData.name,
+                description: courseData.description || ''
+            };
+            
+            // Add to current data
+            currentData.courses.push(newCourse);
+            
+            // Save to server
+            await saveData(currentData);
+            
+            return newCourse;
+        } catch (error) {
+            console.error('Error adding course:', error);
+            throw error;
+        }
+    }
+
+    // Add new skill with persistence
+    async function addSkill(skillData) {
+        try {
+            const currentData = await loadData();
+            
+            // Generate new ID
+            const newId = Math.max(...currentData.skills.map(s => s.id), 0) + 1;
+            
+            // Create new skill object
+            const newSkill = {
+                id: newId,
+                name: skillData.skill_name || skillData.name,
+                description: skillData.description || ''
+            };
+            
+            // Add to current data
+            currentData.skills.push(newSkill);
+            
+            // Save to server
+            await saveData(currentData);
+            
+            return newSkill;
+        } catch (error) {
+            console.error('Error adding skill:', error);
+            throw error;
+        }
+    }
+
+    // Update existing record with persistence
+    async function updateRecord(type, id, updateData) {
+        try {
+            const currentData = await loadData();
+            
+            let updated = false;
+            
+            if (type === 'student') {
+                const index = currentData.students.findIndex(s => s.id === id);
+                if (index !== -1) {
+                    currentData.students[index] = { ...currentData.students[index], ...updateData };
+                    updated = true;
+                }
+            } else if (type === 'course') {
+                const index = currentData.courses.findIndex(c => c.id === id);
+                if (index !== -1) {
+                    currentData.courses[index] = { ...currentData.courses[index], ...updateData };
+                    updated = true;
+                }
+            } else if (type === 'skill') {
+                const index = currentData.skills.findIndex(s => s.id === id);
+                if (index !== -1) {
+                    currentData.skills[index] = { ...currentData.skills[index], ...updateData };
+                    updated = true;
+                }
+            }
+            
+            if (updated) {
+                await saveData(currentData);
+                return currentData;
+            } else {
+                throw new Error(`${type} with ID ${id} not found`);
+            }
+        } catch (error) {
+            console.error(`Error updating ${type}:`, error);
+            throw error;
+        }
+    }
+
+    // Delete record with persistence
+    async function deleteRecord(type, id) {
+        try {
+            const currentData = await loadData();
+            
+            let deleted = false;
+            
+            if (type === 'student') {
+                const index = currentData.students.findIndex(s => s.id === id);
+                if (index !== -1) {
+                    currentData.students.splice(index, 1);
+                    deleted = true;
+                }
+            } else if (type === 'course') {
+                const index = currentData.courses.findIndex(c => c.id === id);
+                if (index !== -1) {
+                    currentData.courses.splice(index, 1);
+                    deleted = true;
+                }
+            } else if (type === 'skill') {
+                const index = currentData.skills.findIndex(s => s.id === id);
+                if (index !== -1) {
+                    currentData.skills.splice(index, 1);
+                    deleted = true;
+                }
+            }
+            
+            if (deleted) {
+                await saveData(currentData);
+                return currentData;
+            } else {
+                throw new Error(`${type} with ID ${id} not found`);
+            }
+        } catch (error) {
+            console.error(`Error deleting ${type}:`, error);
+            throw error;
+        }
+    }
+
     // Initialize all data loading
     async function initializeData() {
         const data = await loadData();
@@ -336,6 +525,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Call the enhanced initialization
     initializeData().catch(console.error);
+    
+    // --- EXPOSE FUNCTIONS GLOBALLY FOR TESTING ---
+    // Make key functions available in global scope for testing and external use
+    window.loadData = loadData;
+    window.saveData = saveData;
+    window.addStudent = addStudent;
+    window.addCourse = addCourse;
+    window.addSkill = addSkill;
+    window.updateRecord = updateRecord;
+    window.deleteRecord = deleteRecord;
+    window.initializeData = initializeData;
 });
 
 // Initialize page-specific functionality
@@ -453,244 +653,249 @@ function handleViewStudent(studentId) {
     });
 }
 
+// --- ENHANCED CRUD OPERATIONS WITH PERSISTENCE ---
+
 function handleEditStudent(studentId) {
-    fetch(`/students`)
-        .then(response => response.json())
-        .then(students => {
-            const student = students.find(s => s.id === studentId);
-            if (student) {
-                const modalContent = `
-                    <form id="edit-student-form" class="modern-form-content">
-                        <div class="form-group">
-                            <label for="edit-name" class="form-label">Name</label>
-                            <input type="text" id="edit-name" name="name" value="${student.name}" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-email" class="form-label">Email</label>
-                            <input type="email" id="edit-email" name="email" value="${student.email || ''}" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-age" class="form-label">Age</label>
-                            <input type="number" id="edit-age" name="age" value="${student.age || ''}" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn-modern btn-primary">Update Student</button>
-                            <button type="button" class="btn-modern btn-outline" onclick="closeModal()">Cancel</button>
-                        </div>
-                    </form>
-                `;
-                showModal('Edit Student', modalContent);
+    loadData().then(data => {
+        const student = data.students.find(s => s.id === studentId);
+        if (student) {
+            const modalContent = `
+                <form id="edit-student-form" class="modern-form-content">
+                    <div class="form-group">
+                        <label for="edit-name" class="form-label">Name</label>
+                        <input type="text" id="edit-name" name="name" value="${student.name}" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-email" class="form-label">Email</label>
+                        <input type="email" id="edit-email" name="email" value="${student.email || ''}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-age" class="form-label">Age</label>
+                        <input type="number" id="edit-age" name="age" value="${student.age || ''}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-courses" class="form-label">Courses</label>
+                        <input type="text" id="edit-courses" name="courses" value="${Array.isArray(student.courses) ? student.courses.join(', ') : ''}" class="form-control" placeholder="Math, Science, etc.">
+                        <small class="form-text">Separate multiple courses with commas</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-skills" class="form-label">Skills</label>
+                        <input type="text" id="edit-skills" name="skills" value="${Array.isArray(student.skills) ? student.skills.join(', ') : ''}" class="form-control" placeholder="Programming, Design, etc.">
+                        <small class="form-text">Separate multiple skills with commas</small>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn-modern btn-primary">Update Student</button>
+                        <button type="button" class="btn-modern btn-outline" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `;
+            showModal('Edit Student', modalContent);
+            
+            document.getElementById('edit-student-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const updateData = Object.fromEntries(formData.entries());
                 
-                document.getElementById('edit-student-form').addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const formData = new FormData(e.target);
-                    const data = Object.fromEntries(formData.entries());
-                    data.id = studentId;
-                    
-                    fetch('/update-student', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response => response.text())
-                    .then(message => {
-                        showAlert(message, 'success');
+                // Process courses and skills arrays
+                updateData.courses = updateData.courses ? updateData.courses.split(',').map(c => c.trim()).filter(Boolean) : [];
+                updateData.skills = updateData.skills ? updateData.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
+                updateData.age = parseInt(updateData.age) || null;
+                
+                updateRecord('student', studentId, updateData)
+                    .then(() => {
+                        showAlert('Student updated successfully!', 'success');
                         closeModal();
-                        location.reload();
+                        setTimeout(() => location.reload(), 1000);
                     })
                     .catch(error => {
                         showAlert('Error updating student', 'error');
+                        console.error('Update error:', error);
                     });
-                });
-            }
-        });
+            });
+        } else {
+            showAlert('Student not found', 'error');
+        }
+    }).catch(error => {
+        showAlert('Error loading student data', 'error');
+        console.error('Load error:', error);
+    });
 }
 
 function handleDeleteStudent(studentId) {
-    if (confirm('Are you sure you want to delete this student?')) {
-        fetch('/delete-student', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: studentId })
-        })
-        .then(response => response.text())
-        .then(message => {
-            showAlert(message, 'success');
-            location.reload();
-        })
-        .catch(error => {
-            showAlert('Error deleting student', 'error');
-        });
+    if (confirm('Are you sure you want to delete this student? This action cannot be undone.')) {
+        deleteRecord('student', studentId)
+            .then(() => {
+                showAlert('Student deleted successfully!', 'success');
+                setTimeout(() => location.reload(), 1000);
+            })
+            .catch(error => {
+                showAlert('Error deleting student', 'error');
+                console.error('Delete error:', error);
+            });
     }
 }
 
-// Similar functions for courses and skills
+// Similar functions for courses and skills with persistence
 function handleViewCourse(courseId) {
-    fetch(`/courses`)
-        .then(response => response.json())
-        .then(courses => {
-            const course = courses.find(c => c.id === courseId);
-            if (course) {
-                const modalContent = `
-                    <div class="course-details">
-                        <h5>${course.name}</h5>
-                        <p><strong>Description:</strong> ${course.description || 'No description provided'}</p>
-                    </div>
-                `;
-                showModal('Course Details', modalContent);
-            }
-        });
+    loadData().then(data => {
+        const course = data.courses.find(c => c.id === courseId);
+        if (course) {
+            const modalContent = `
+                <div class="course-details">
+                    <h5>${course.name}</h5>
+                    <p><strong>Description:</strong> ${course.description || 'No description provided'}</p>
+                </div>
+            `;
+            showModal('Course Details', modalContent);
+        } else {
+            showAlert('Course not found', 'error');
+        }
+    }).catch(error => {
+        showAlert('Error loading course data', 'error');
+        console.error('Load error:', error);
+    });
 }
 
 function handleEditCourse(courseId) {
-    fetch(`/courses`)
-        .then(response => response.json())
-        .then(courses => {
-            const course = courses.find(c => c.id === courseId);
-            if (course) {
-                const modalContent = `
-                    <form id="edit-course-form" class="modern-form-content">
-                        <div class="form-group">
-                            <label for="edit-course-name" class="form-label">Course Name</label>
-                            <input type="text" id="edit-course-name" name="course_name" value="${course.name}" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-course-description" class="form-label">Description</label>
-                            <textarea id="edit-course-description" name="description" class="form-control" rows="3">${course.description || ''}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn-modern btn-primary">Update Course</button>
-                            <button type="button" class="btn-modern btn-outline" onclick="closeModal()">Cancel</button>
-                        </div>
-                    </form>
-                `;
-                showModal('Edit Course', modalContent);
+    loadData().then(data => {
+        const course = data.courses.find(c => c.id === courseId);
+        if (course) {
+            const modalContent = `
+                <form id="edit-course-form" class="modern-form-content">
+                    <div class="form-group">
+                        <label for="edit-course-name" class="form-label">Course Name</label>
+                        <input type="text" id="edit-course-name" name="name" value="${course.name}" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-course-description" class="form-label">Description</label>
+                        <textarea id="edit-course-description" name="description" class="form-control" rows="3">${course.description || ''}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn-modern btn-primary">Update Course</button>
+                        <button type="button" class="btn-modern btn-outline" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `;
+            showModal('Edit Course', modalContent);
+            
+            document.getElementById('edit-course-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const updateData = Object.fromEntries(formData.entries());
                 
-                document.getElementById('edit-course-form').addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const formData = new FormData(e.target);
-                    const data = Object.fromEntries(formData.entries());
-                    data.id = courseId;
-                    
-                    fetch('/update-course', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response => response.text())
-                    .then(message => {
-                        showAlert(message, 'success');
+                updateRecord('course', courseId, updateData)
+                    .then(() => {
+                        showAlert('Course updated successfully!', 'success');
                         closeModal();
-                        location.reload();
+                        setTimeout(() => location.reload(), 1000);
                     })
                     .catch(error => {
                         showAlert('Error updating course', 'error');
+                        console.error('Update error:', error);
                     });
-                });
-            }
-        });
+            });
+        } else {
+            showAlert('Course not found', 'error');
+        }
+    }).catch(error => {
+        showAlert('Error loading course data', 'error');
+        console.error('Load error:', error);
+    });
 }
 
 function handleDeleteCourse(courseId) {
-    if (confirm('Are you sure you want to delete this course?')) {
-        fetch('/delete-course', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: courseId })
-        })
-        .then(response => response.text())
-        .then(message => {
-            showAlert(message, 'success');
-            location.reload();
-        })
-        .catch(error => {
-            showAlert('Error deleting course', 'error');
-        });
+    if (confirm('Are you sure you want to delete this course? This action cannot be undone.')) {
+        deleteRecord('course', courseId)
+            .then(() => {
+                showAlert('Course deleted successfully!', 'success');
+                setTimeout(() => location.reload(), 1000);
+            })
+            .catch(error => {
+                showAlert('Error deleting course', 'error');
+                console.error('Delete error:', error);
+            });
     }
 }
 
-// Skill functions
+// Skill functions with persistence
 function handleViewSkill(skillId) {
-    fetch(`/skills`)
-        .then(response => response.json())
-        .then(skills => {
-            const skill = skills.find(s => s.id === skillId);
-            if (skill) {
-                const modalContent = `
-                    <div class="skill-details">
-                        <h5>${skill.name}</h5>
-                        <p><strong>Description:</strong> ${skill.description || 'No description provided'}</p>
-                    </div>
-                `;
-                showModal('Skill Details', modalContent);
-            }
-        });
+    loadData().then(data => {
+        const skill = data.skills.find(s => s.id === skillId);
+        if (skill) {
+            const modalContent = `
+                <div class="skill-details">
+                    <h5>${skill.name}</h5>
+                    <p><strong>Description:</strong> ${skill.description || 'No description provided'}</p>
+                </div>
+            `;
+            showModal('Skill Details', modalContent);
+        } else {
+            showAlert('Skill not found', 'error');
+        }
+    }).catch(error => {
+        showAlert('Error loading skill data', 'error');
+        console.error('Load error:', error);
+    });
 }
 
 function handleEditSkill(skillId) {
-    fetch(`/skills`)
-        .then(response => response.json())
-        .then(skills => {
-            const skill = skills.find(s => s.id === skillId);
-            if (skill) {
-                const modalContent = `
-                    <form id="edit-skill-form" class="modern-form-content">
-                        <div class="form-group">
-                            <label for="edit-skill-name" class="form-label">Skill Name</label>
-                            <input type="text" id="edit-skill-name" name="skill_name" value="${skill.name}" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-skill-description" class="form-label">Description</label>
-                            <textarea id="edit-skill-description" name="description" class="form-control" rows="3">${skill.description || ''}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn-modern btn-primary">Update Skill</button>
-                            <button type="button" class="btn-modern btn-outline" onclick="closeModal()">Cancel</button>
-                        </div>
-                    </form>
-                `;
-                showModal('Edit Skill', modalContent);
+    loadData().then(data => {
+        const skill = data.skills.find(s => s.id === skillId);
+        if (skill) {
+            const modalContent = `
+                <form id="edit-skill-form" class="modern-form-content">
+                    <div class="form-group">
+                        <label for="edit-skill-name" class="form-label">Skill Name</label>
+                        <input type="text" id="edit-skill-name" name="name" value="${skill.name}" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-skill-description" class="form-label">Description</label>
+                        <textarea id="edit-skill-description" name="description" class="form-control" rows="3">${skill.description || ''}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn-modern btn-primary">Update Skill</button>
+                        <button type="button" class="btn-modern btn-outline" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `;
+            showModal('Edit Skill', modalContent);
+            
+            document.getElementById('edit-skill-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const updateData = Object.fromEntries(formData.entries());
                 
-                document.getElementById('edit-skill-form').addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const formData = new FormData(e.target);
-                    const data = Object.fromEntries(formData.entries());
-                    data.id = skillId;
-                    
-                    fetch('/update-skill', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response => response.text())
-                    .then(message => {
-                        showAlert(message, 'success');
+                updateRecord('skill', skillId, updateData)
+                    .then(() => {
+                        showAlert('Skill updated successfully!', 'success');
                         closeModal();
-                        location.reload();
+                        setTimeout(() => location.reload(), 1000);
                     })
                     .catch(error => {
                         showAlert('Error updating skill', 'error');
+                        console.error('Update error:', error);
                     });
-                });
-            }
-        });
+            });
+        } else {
+            showAlert('Skill not found', 'error');
+        }
+    }).catch(error => {
+        showAlert('Error loading skill data', 'error');
+        console.error('Load error:', error);
+    });
 }
 
 function handleDeleteSkill(skillId) {
-    if (confirm('Are you sure you want to delete this skill?')) {
-        fetch('/delete-skill', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: skillId })
-        })
-        .then(response => response.text())
-        .then(message => {
-            showAlert(message, 'success');
-            location.reload();
-        })
-        .catch(error => {
-            showAlert('Error deleting skill', 'error');
-        });
+    if (confirm('Are you sure you want to delete this skill? This action cannot be undone.')) {
+        deleteRecord('skill', skillId)
+            .then(() => {
+                showAlert('Skill deleted successfully!', 'success');
+                setTimeout(() => location.reload(), 1000);
+            })
+            .catch(error => {
+                showAlert('Error deleting skill', 'error');
+                console.error('Delete error:', error);
+            });
     }
 }
 
@@ -750,60 +955,108 @@ function showAlert(message, type = 'success') {
     }
 }
 
+// --- ENHANCED FORM HANDLERS WITH PERSISTENCE ---
+
 function handleStudentForm(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
+    
+    // Show loading state
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="loading"></span> Adding Student...';
+    submitBtn.disabled = true;
 
-    fetch('add-student', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }).then(response => response.text())
-      .then(text => {
-          document.getElementById('response-message').innerText = text;
-          event.target.reset();
-      })
-      .catch(error => console.error('Error:', error));
+    // Handle multiple selections (courses, skills)
+    const courseSelects = event.target.querySelectorAll('select[name="courses"], input[name="courses"]:checked');
+    const skillSelects = event.target.querySelectorAll('select[name="skills"], input[name="skills"]:checked');
+    
+    data.courses = Array.from(courseSelects).map(el => el.value).filter(Boolean);
+    data.skills = Array.from(skillSelects).map(el => el.value).filter(Boolean);
+
+    addStudent(data)
+        .then(newStudent => {
+            showAlert(`Student "${newStudent.name}" added successfully!`, 'success');
+            event.target.reset();
+            
+            // Refresh the page data
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('Error adding student. Please try again.', 'error');
+        })
+        .finally(() => {
+            // Reset button state
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        });
 }
 
 function handleCourseForm(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
+    
+    // Show loading state
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="loading"></span> Adding Course...';
+    submitBtn.disabled = true;
 
-    fetch('/add-course', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }).then(response => response.text())
-      .then(text => {
-          document.getElementById('response-message').innerText = text;
-          event.target.reset();
-      })
-      .catch(error => console.error('Error:', error));
+    addCourse(data)
+        .then(newCourse => {
+            showAlert(`Course "${newCourse.name}" added successfully!`, 'success');
+            event.target.reset();
+            
+            // Refresh the page data
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('Error adding course. Please try again.', 'error');
+        })
+        .finally(() => {
+            // Reset button state
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        });
 }
 
 function handleSkillForm(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
+    
+    // Show loading state
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="loading"></span> Adding Skill...';
+    submitBtn.disabled = true;
 
-    fetch('/add-skill', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }).then(response => response.text())
-      .then(text => {
-          document.getElementById('response-message').innerText = text;
-          event.target.reset();
-      })
-      .catch(error => console.error('Error:', error));
+    addSkill(data)
+        .then(newSkill => {
+            showAlert(`Skill "${newSkill.name}" added successfully!`, 'success');
+            event.target.reset();
+            
+            // Refresh the page data
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('Error adding skill. Please try again.', 'error');
+        })
+        .finally(() => {
+            // Reset button state
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        });
 }
 
