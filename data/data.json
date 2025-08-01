@@ -42,6 +42,36 @@
                 "Problem Solving"
             ],
             "dateAdded": "2025-08-01"
+        },
+        {
+            "id": 4,
+            "name": "uieoioe oioio`oio`",
+            "email": "jdldgklfkl@gmail.com",
+            "age": -1,
+            "courses": [],
+            "skills": [
+                "Data Analysis",
+                "Communication"
+            ],
+            "dateAdded": "2025-08-01"
+        },
+        {
+            "id": 5,
+            "name": "dudiudi",
+            "email": "",
+            "age": null,
+            "courses": [],
+            "skills": [],
+            "dateAdded": "2025-08-01"
+        },
+        {
+            "id": 6,
+            "name": "3456789",
+            "email": "",
+            "age": 444,
+            "courses": [],
+            "skills": [],
+            "dateAdded": "2025-08-01"
         }
     ],
     "courses": [
