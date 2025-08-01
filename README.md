@@ -11,7 +11,7 @@
 [![Express.js](https://img.shields.io/badge/Express.js-4.18+-blue.svg)](https://expressjs.com/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
-*Developed by Shittu Rofeeq Adeleke (IDEAS/24/87636)*  
+*Developed by Shittu Rofeeq (IDEAS/24/87636)*  
 *Baze University, Abuja - Software Engineering Department*
 
 [Live Demo](https://student-mgt-system.vercel.app/) • [Documentation](#api-documentation) • [Report Bug](https://github.com/rofeeqshittu/student-mgt-system/issues) • [Request Feature](https://github.com/rofeeqshittu/student-mgt-system/issues)
@@ -259,8 +259,8 @@ Response: 200 OK
 [
   {
     "id": 1,
-    "name": "John Doe",
-    "email": "john.doe@university.edu",
+    "name": "Aminat Adegoke",
+    "email": "aminaola@bazeuni.edu.ng",
     "age": 22,
     "courses": ["Math", "Science"],
     "skills": ["Programming", "Analysis"]
@@ -274,8 +274,8 @@ POST /add-student
 Content-Type: application/json
 
 {
-  "name": "Jane Smith",
-  "email": "jane.smith@university.edu",
+  "name": "Rofeeq Ade",
+  "email": "rofeeqs@university.edu",
   "age": 21,
   "courses": ["Computer Science"],
   "skills": ["JavaScript", "React"]
@@ -289,8 +289,8 @@ Content-Type: application/json
 
 {
   "id": 1,
-  "name": "John Doe Updated",
-  "email": "john.updated@university.edu"
+  "name": "Rofeeq Ade Updated",
+  "email": "rofeeqs@university.edu"
 }
 ```
 
@@ -456,7 +456,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 - **GitHub**: [github.com/rofeeqshittu](https://github.com/rofeeqshittu)
 
 ### Project Resources
-- **Live Demo**: [eduvexa.vercel.app](https://student-mgt-system.vercel.app/)
+- **Live Demo**: [student-mgt-system.vercel.app](https://student-mgt-system.vercel.app/)
 - **Repository**: [github.com/rofeeqshittu/student-mgt-system](https://github.com/rofeeqshittu/student-mgt-system)
 - **Issue Tracker**: [github.com/rofeeqshittu/student-mgt-system/issues](https://github.com/rofeeqshittu/student-mgt-system/issues)
 
